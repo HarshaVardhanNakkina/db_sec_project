@@ -57,7 +57,7 @@ class Graph {
     }
 }
 
-public class gHMAC {
+public class gVrfy {
 
     public static int key = 1234554321;
     public static int random = 1357908642;
@@ -128,18 +128,17 @@ public class gHMAC {
 
     public static void main(String[] args) throws Exception {
         BufferedReader graphData = null;
-        Graph graph = new Graph(36692, true); // true: for dir graphs; false: for undir graphs
+        Graph graph = new Graph(6, true); // true: for dir graphs; false: for undir graphs
 
         graphData = new BufferedReader(new FileReader("./data/sample.txt"));
 
         String currentLine;
         while ((currentLine = graphData.readLine()) != null) {
-            String[] nodes = currentLine.trim().split("\\s+");
+            String[] nodes = currentLine.split("\\s+");
             graph.addEdge(Integer.parseInt(nodes[0]), Integer.parseInt(nodes[1]));
         }
 
         
-        graphData.close();
         // graph.printGraph();
         initProps(graph);
         
@@ -153,13 +152,7 @@ public class gHMAC {
         String graphTag = getCryptoHash( (key ^ opad) + getCryptoHash((key ^ opad) + ghash + random, "SHA-256"), "SHA-256");
         
         System.out.println(graphTag);
-
-        // graph.vertexMap.forEach((vertex, node) -> {
-        //     System.out.print(vertex + ":");
-        //     for(Node el: node.outList)
-        //         System.out.print("->" + el.label);
-        //     System.out.println();
-        // });
         
+        graphData.close();
     }
 }
