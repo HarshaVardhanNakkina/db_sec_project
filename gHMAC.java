@@ -1,16 +1,13 @@
 import java.util.*;
 import java.io.*;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import dbsec.*;
 import gVrfy.*;
 
 public class gHMAC {
 
-  private static List<Node> sourceList = new ArrayList<Node>();
-  private static String ghash = "";
-  private static String hashAlgo = "SHA-256";
+  public static List<Node> sourceList = new ArrayList<Node>();
+  public static String ghash = "";
+  public static String hashAlgo = "SHA-256";
   public static int key = 1234554321;
   public static int random = 1357908642;
   public static int OPAD = Integer.parseInt("36", 16);
@@ -19,7 +16,7 @@ public class gHMAC {
 
   public static void main(String[] args) throws Exception {
     BufferedReader graphData = null;
-    graphData = new BufferedReader(new FileReader("./data/email-Enron.txt"));
+    graphData = new BufferedReader(new FileReader("./data/sample.txt"));
     String currentLine = graphData.readLine();
     int n = Integer.parseInt(currentLine.trim());
 
@@ -32,6 +29,9 @@ public class gHMAC {
 
     graphData.close();
     graph.adjList.forEach((label, node) -> {
+      node.color = Color.WHITE;
+    });
+    graph.adjList.forEach((label, node) -> {
       if (node.color == Color.WHITE) {
         sourceList.add(node);
         ghash = graph.BFS(node, random, hashAlgo);
@@ -40,6 +40,10 @@ public class gHMAC {
     graphTag = graph.getCryptoHash((key ^ OPAD) + graph.getCryptoHash((key ^ IPAD) + random + ghash, hashAlgo),
         hashAlgo);
     gVrfy verifier = new gVrfy();
+
+    // System.out.println("sourceList size " + sourceList.size());
+    // for(Node node: sourceList)
+    //   System.out.println(node.label);
 
     System.out.println("Hash value on sender's side: " + graphTag);
     verifier.gVerify(sourceList, graph, graphTag, ghash);

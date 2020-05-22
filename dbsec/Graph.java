@@ -62,8 +62,8 @@ public class Graph {
     n.color = Color.GRAY;
     String outXor = getCryptoHash(Integer.toString(n.label), hashAlgo);
 
-    if (!outXor.equals(n.labelHash))
-      throw new Exception(n.label + "'s label hash is not matching, data has been modified");
+    // if (!outXor.equals(n.labelHash))
+    //   throw new Exception(n.label + "'s label hash is not matching, data has been modified");
 
     while (!q.isEmpty()) {
       int size = q.size();
@@ -71,16 +71,16 @@ public class Graph {
         Node u = q.poll();
         for (Node child : u.outList) {
           String childCalcHash = getCryptoHash(Integer.toString(child.label), hashAlgo);
-          if (!childCalcHash.equals(child.labelHash))
-            throw new Exception(child.label + "'s label hash is not matching, data has been modified");
+          // if (!childCalcHash.equals(child.labelHash))
+          //   throw new Exception(child.label + "'s label hash is not matching, data has been modified");
           outXor = xor(outXor, childCalcHash);
           if (child.color == Color.WHITE)
             q.add(child);
         }
         u.color = Color.BLACK;
         String calcHashVal = getCryptoHash(random + outXor + u.label, hashAlgo);
-        if (!u.hashVal.equals(calcHashVal))
-          throw new Exception(u.label + "'s label hash is not matching, data has been modified");
+        // if (!u.hashVal.equals(calcHashVal))
+        //   throw new Exception(u.label + "'s label hash is not matching, data has been modified");
         ghash = getCryptoHash(ghash + random + calcHashVal, hashAlgo);
       }
     }

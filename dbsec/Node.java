@@ -16,5 +16,6 @@ public class Node {
   public Node(int vertex) {
     this.label = vertex;
     this.outList = new ArrayList<Node>();
+    this.labelHash = "";
   }
 }

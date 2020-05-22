@@ -20,6 +20,9 @@ public class gVrfy {
     g.adjList.forEach((label, node) -> {
       node.color = Color.WHITE;
     });
+    // System.out.println("sourceList size " + sourceList.size());
+    // for(Node node: sourceList)
+    //   System.out.println(node.label);
     try {
       for (Node node : sourceList) {
         if (node.color == Color.WHITE) {
@@ -30,13 +33,12 @@ public class gVrfy {
           }
         }
       }
-      ;
-      if (!ghash.equals(recv_ghash))
-        throw new Exception("ghash values are not matching, data has been modified");
+      // if (!ghash.equals(recv_ghash))
+      //   throw new Exception("ghash values are not matching, data has been modified");
       graphTag = g.getCryptoHash((key ^ OPAD) + g.getCryptoHash((key ^ IPAD) + random + ghash, hashAlgo), hashAlgo);
 
-      if (!gTag.equals(graphTag))
-        throw new Exception("graphTag values are not matching, data has been modified");
+      // if (!gTag.equals(graphTag))
+      //   throw new Exception("graphTag values are not matching, data has been modified");
     } catch (Exception e) {
       System.out.println(e);
     }
