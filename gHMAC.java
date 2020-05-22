@@ -4,30 +4,9 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import dbsec.*;
+import gVrfy.*;
 
 public class gHMAC {
-
-  // public static String xor(String s1, String s2) {
-  //   StringBuilder sb = new StringBuilder();
-  //   for (int i = 0; i < s1.length() && i < s2.length(); i++)
-  //     sb.append((char) (s1.charAt(i) ^ s2.charAt(i)));
-  //   return sb.toString();
-  // }
-
-  // public static String getCryptoHash(String input, String algorithm) {
-  //   try {
-  //     MessageDigest msgDigest = MessageDigest.getInstance(algorithm);
-  //     byte[] inputDigest = msgDigest.digest(input.getBytes());
-  //     BigInteger inputDigestBigInt = new BigInteger(1, inputDigest);
-  //     String hashtext = inputDigestBigInt.toString(16);
-  //     while (hashtext.length() < 32) {
-  //       hashtext = "0" + hashtext;
-  //     }
-  //     return hashtext;
-  //   } catch (NoSuchAlgorithmException e) {
-  //     throw new RuntimeException(e);
-  //   }
-  // }
 
   private static List<Node> sourceList = new ArrayList<Node>();
   private static String ghash = "";
@@ -37,33 +16,6 @@ public class gHMAC {
   public static int OPAD = Integer.parseInt("36", 16);
   public static int IPAD = Integer.parseInt("5c", 16);
   public static String graphTag = "";
-
-  // public static String BFS(Node n) {
-
-  //   Queue<Node> q = new LinkedList<Node>();
-  //   q.add(n);
-  //   n.color = Color.GRAY;
-  //   String outXor = n.labelHash = getCryptoHash(Integer.toString(n.label), hashAlgo);
-
-  //   while (!q.isEmpty()) {
-  //     int size = q.size();
-  //     while (size-- > 0) {
-  //       Node u = q.poll();
-  //       for (Node child : u.outList) {
-  //         if (child.labelHash.isEmpty())
-  //           child.labelHash = getCryptoHash(Integer.toString(child.label), hashAlgo);
-  //         outXor = xor(outXor, child.labelHash);
-  //         if (child.color == Color.WHITE)
-  //           q.add(child);
-  //       }
-  //       u.color = Color.BLACK;
-  //       u.hashVal = getCryptoHash(random + outXor + u.label, hashAlgo);
-  //       ghash = getCryptoHash(ghash + random + u.hashVal, hashAlgo);
-  //     }
-  //   }
-
-  //   return ghash;
-  // }
 
   public static void main(String[] args) throws Exception {
     BufferedReader graphData = null;
@@ -85,8 +37,12 @@ public class gHMAC {
         ghash = graph.BFS(node, random, hashAlgo);
       }
     });
-    graphTag = graph.getCryptoHash((key ^ OPAD) + graph.getCryptoHash((key ^ IPAD) + random + ghash, hashAlgo), hashAlgo);
+    graphTag = graph.getCryptoHash((key ^ OPAD) + graph.getCryptoHash((key ^ IPAD) + random + ghash, hashAlgo),
+        hashAlgo);
+    gVrfy verifier = new gVrfy();
 
-    System.out.println(graphTag);
+    System.out.println("Hash value on sender's side: " + graphTag);
+    verifier.gVerify(sourceList, graph, graphTag, ghash);
+
   }
 }

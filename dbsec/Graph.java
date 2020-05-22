@@ -54,6 +54,39 @@ public class Graph {
     return ghash;
   }
 
+  public String BFSVrfy(Node n, int random, String hashAlgo) throws Exception {
+    // * IMPLEMENTS THE FAIL-STOP / FAIL-WARN MECHANISM
+    String ghash = "";
+    Queue<Node> q = new LinkedList<Node>();
+    q.add(n);
+    n.color = Color.GRAY;
+    String outXor = getCryptoHash(Integer.toString(n.label), hashAlgo);
+
+    if (!outXor.equals(n.labelHash))
+      throw new Exception(n.label + "'s label hash is not matching, data has been modified");
+
+    while (!q.isEmpty()) {
+      int size = q.size();
+      while (size-- > 0) {
+        Node u = q.poll();
+        for (Node child : u.outList) {
+          String childCalcHash = getCryptoHash(Integer.toString(child.label), hashAlgo);
+          if (!childCalcHash.equals(child.labelHash))
+            throw new Exception(child.label + "'s label hash is not matching, data has been modified");
+          outXor = xor(outXor, childCalcHash);
+          if (child.color == Color.WHITE)
+            q.add(child);
+        }
+        u.color = Color.BLACK;
+        String calcHashVal = getCryptoHash(random + outXor + u.label, hashAlgo);
+        if (!u.hashVal.equals(calcHashVal))
+          throw new Exception(u.label + "'s label hash is not matching, data has been modified");
+        ghash = getCryptoHash(ghash + random + calcHashVal, hashAlgo);
+      }
+    }
+    return ghash;
+  }
+
   public void printGraph() {
     this.adjList.forEach((label, node) -> {
       System.out.print(label);
