@@ -7,8 +7,8 @@ import java.util.*;
 
 public class Node {
 
-  public List<Node> outList; // order of traversl of children
-  public List<Node> children;
+  public Set<Node> outList; // order of traversl of children
+  public Set<Node> children;
   public String labelHash;
   public String hashVal;
   public Color color;
@@ -16,8 +16,8 @@ public class Node {
 
   public Node(int vertex) {
     this.label = vertex;
-    this.outList = new ArrayList<Node>();
-    this.children = new ArrayList<Node>();
+    this.outList = new HashSet<Node>();
+    this.children = new HashSet<Node>();
     this.labelHash = "";
   }
 }

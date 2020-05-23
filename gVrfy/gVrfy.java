@@ -20,6 +20,8 @@ public class gVrfy {
 
     g.adjList.forEach((label, node) -> {
       node.color = Color.WHITE;
+      // if(label == 1) //* To verify fail-warn/stop mechanism
+      //   node.label = 5; 
     });
     // System.out.println("sourceList size " + sourceList.size());
     // for(Node node: sourceList)
@@ -44,7 +46,7 @@ public class gVrfy {
       System.out.println(e);
     }
     System.out.println("Hash value on receiver's side: " + graphTag);
-    
+
     boolean isMatching = gTag.equals(graphTag);
     System.out.println("\n" + isMatching);
     if (isMatching)

@@ -2,6 +2,7 @@ package dbsec;
 
 import java.util.*;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -19,16 +20,19 @@ public class Graph {
   public void addEdge(int src, int dst) {
     if (!this.adjList.containsKey(src))
       this.adjList.put(src, new Node(src));
-    this.adjList.get(src).children.add(this.adjList.getOrDefault(dst, new Node(dst)));
-    if (!this.directed) {
-      if (!this.adjList.containsKey(dst))
-        this.adjList.put(dst, new Node(dst));
-      this.adjList.get(dst).children.add(this.adjList.getOrDefault(src, new Node(src)));
-    }
+    if (!this.adjList.containsKey(dst))
+      this.adjList.put(dst, new Node(dst));
+
+    if (!this.adjList.get(src).children.contains(this.adjList.get(dst)))
+      this.adjList.get(src).children.add(this.adjList.get(dst));
+
+    if (!this.directed)
+      if (!this.adjList.get(dst).children.contains(this.adjList.get(src)))
+        this.adjList.get(dst).children.add(this.adjList.getOrDefault(src, new Node(src)));
   }
 
   public String BFS(Node n, int random, String hashAlgo) {
-    String gHash = "";
+    String gHash = "hymn_for_the_weekend";
     LinkedList<Node> q = new LinkedList<Node>();
     q.offer(n);
     n.color = Color.GRAY;
@@ -42,7 +46,7 @@ public class Graph {
           u.outList.add(child);
           if (child.labelHash.isEmpty())
             child.labelHash = getCryptoHash(Integer.toString(child.label), hashAlgo);
-          outXor = getCryptoHash(outXor + child.labelHash, hashAlgo);
+          outXor = getCryptoHash(outXor + child.labelHash, hashAlgo); // xor function can also be
           if (child.color == Color.WHITE) {
             child.color = Color.GRAY;
             q.offer(child);
@@ -59,9 +63,7 @@ public class Graph {
 
   public String BFSVrfy(Node n, int random, String hashAlgo) throws Exception {
     // * IMPLEMENTS THE FAIL-STOP / FAIL-WARN MECHANISM
-    // System.out.println("randomForBitsNonZero: " + randomForBitsNonZero(128, new
-    // Random()));
-    String gHash = "";
+    String gHash = "hymn_for_the_weekend";
     LinkedList<Node> q = new LinkedList<Node>();
     q.offer(n);
     n.color = Color.GRAY;
@@ -79,7 +81,7 @@ public class Graph {
           if (!childCalcHash.equals(child.labelHash))
             throw new Exception(
                 child.label + "'s label hash is not matching, data has been modified: children traversal");
-          outXor = getCryptoHash(outXor + childCalcHash, hashAlgo);
+          outXor = getCryptoHash(outXor + childCalcHash, hashAlgo); // xor function can also be
           if (child.color == Color.WHITE) {
             child.color = Color.GRAY;
             q.offer(child);
@@ -117,56 +119,30 @@ public class Graph {
     return sb.toString();
   }
 
+  private static String bytesToHex(byte[] hash) {
+    StringBuffer hexString = new StringBuffer();
+    for (int i = 0; i < hash.length; i++) {
+      String hex = Integer.toHexString(0xff & hash[i]);
+      if (hex.length() == 1)
+        hexString.append('0');
+      hexString.append(hex);
+    }
+    return hexString.toString();
+  }
+
   public String getCryptoHash(String input, String algorithm) {
     try {
       MessageDigest msgDigest = MessageDigest.getInstance(algorithm);
-      byte[] inputDigest = msgDigest.digest(input.getBytes());
-      BigInteger inputDigestBigInt = new BigInteger(1, inputDigest);
-      String hashtext = inputDigestBigInt.toString(16);
-      while (hashtext.length() < 32) {
-        hashtext = "0" + hashtext;
-      }
+      byte[] inputDigest = msgDigest.digest(input.getBytes(StandardCharsets.UTF_8));
+      String hashtext = bytesToHex(inputDigest);
+      // BigInteger inputDigestBigInt = new BigInteger(1, inputDigest);
+      // String hashtext = inputDigestBigInt.toString(16);
+      // while (hashtext.length() < 32) {
+      // hashtext = "0" + hashtext;
+      // }
       return hashtext;
     } catch (NoSuchAlgorithmException e) {
       throw new RuntimeException(e);
     }
-  }
-
-  public String encode(String s, String key) {
-    return base64Encode(xorWithKey(s.getBytes(), key.getBytes()));
-  }
-
-  public String decode(String s, String key) {
-    return new String(xorWithKey(base64Decode(s), key.getBytes()));
-  }
-
-  private byte[] xorWithKey(byte[] a, byte[] key) {
-    byte[] out = new byte[a.length];
-    for (int i = 0; i < a.length; i++) {
-      out[i] = (byte) (a[i] ^ key[i % key.length]);
-    }
-    return out;
-  }
-
-  private byte[] base64Decode(String s) {
-    try {
-      return Base64.getDecoder().decode(s);
-      // return Base64.decode(s, Base64.DEFAULT);
-    } catch (IllegalArgumentException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  private String base64Encode(byte[] bytes) {
-    return Base64.getEncoder().encodeToString(bytes).replaceAll("\\s", "");
-    // return Base64.encodeToString(bytes, Base64.DEFAULT).replaceAll("\\s", "");
-  }
-
-  public static BigInteger randomForBitsNonZero(int numBits, Random r) {
-    BigInteger candidate = new BigInteger(numBits, r);
-    while (candidate.equals(BigInteger.ZERO)) {
-      candidate = new BigInteger(numBits, r);
-    }
-    return candidate;
   }
 }
