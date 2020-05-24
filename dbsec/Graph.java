@@ -28,7 +28,7 @@ public class Graph {
 
     if (!this.directed)
       if (!this.adjList.get(dst).children.contains(this.adjList.get(src)))
-        this.adjList.get(dst).children.add(this.adjList.getOrDefault(src, new Node(src)));
+        this.adjList.get(dst).children.add(this.adjList.get(src));
   }
 
   public String BFS(Node n, int random, String hashAlgo) {
