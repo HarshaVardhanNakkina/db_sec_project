@@ -19,36 +19,35 @@ public class gHMAC {
     BufferedReader graphData = null;
     graphData = new BufferedReader(new FileReader("./data/30000.txt"));
     String currentLine = graphData.readLine();
-    int n = Integer.parseInt(currentLine.trim());
+    // int n = Integer.parseInt(currentLine.trim());
 
-    Graph graph = new Graph(n, false); // * true: for dir graphs; false: for undir graphs
+    Graph graph = new Graph(false); // * true: for dir graphs; false: for undir graphs
     while ((currentLine = graphData.readLine()) != null) {
       String[] nodes = currentLine.trim().split("\\s+");
       int src = Integer.parseInt(nodes[0]), dst = Integer.parseInt(nodes[1]);
       if(src != dst)
         graph.addEdge(src, dst);
     }
-
     graphData.close();
+
     graph.adjList.forEach((label, node) -> {
       node.color = Color.WHITE;
     });
-    System.out.println("\n============Calculating============");
+    System.out.println("============Calculating============\n");
     graph.adjList.forEach((label, node) -> {
       if (node.color == Color.WHITE) {
         sourceList.add(node);
         ghash = graph.BFS(node, random, hashAlgo);
       }
     });
-    System.out.println("sourceList size " + sourceList.size());
+    // System.out.println("sourceList size " + sourceList.size());
     // for(Node node: sourceList)
     // System.out.println(node.label);
     graphTag = graph.getCryptoHash((key ^ OPAD) + graph.getCryptoHash((key ^ IPAD) + random + ghash, hashAlgo),
     hashAlgo);
+    System.out.println("Hash value on sender's side: " + graphTag);
     
     gVrfy verifier = new gVrfy();
-
-    System.out.println("Hash value on sender's side: " + graphTag);
     verifier.gVerify(sourceList, graph, graphTag, ghash);
 
   }

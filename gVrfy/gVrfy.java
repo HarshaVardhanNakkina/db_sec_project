@@ -13,28 +13,22 @@ public class gVrfy {
   public static int IPAD = Integer.parseInt("5c", 16);
   public static String graphTag = "";
 
-  public boolean gVerify(List<Node> sourceList, Graph g, String gTag, String recv_ghash) {
+  public void gVerify(List<Node> sourceList, Graph g, String gTag, String recv_ghash) {
     // * RESET THE COLORS FIRST
     System.out.println("\n============Verifying============");
-    // g.printGraph();
 
     g.adjList.forEach((label, node) -> {
       node.color = Color.WHITE;
       // if(label == 1) //* To verify fail-warn/stop mechanism
-      //   node.label = 5; 
+      // node.label = 5;
     });
     // System.out.println("sourceList size " + sourceList.size());
     // for(Node node: sourceList)
     // System.out.println(node.label);
     try {
       for (Node node : sourceList) {
-        if (node.color == Color.WHITE) {
-          try {
-            ghash = g.BFSVrfy(node, random, hashAlgo);
-          } catch (Exception e) {
-            System.out.println(e);
-          }
-        }
+        if (node.color == Color.WHITE)
+          ghash = g.BFSVrfy(node, random, hashAlgo);
       }
       if (!ghash.equals(recv_ghash))
         throw new Exception("ghash values are not matching, data has been modified");
@@ -45,6 +39,7 @@ public class gVrfy {
     } catch (Exception e) {
       System.out.println(e);
     }
+
     System.out.println("Hash value on receiver's side: " + graphTag);
 
     boolean isMatching = gTag.equals(graphTag);
@@ -53,11 +48,5 @@ public class gVrfy {
       System.out.println("\nHash values are matching, data has not been modified");
     else
       System.out.println("\nHash values are not matching, data has been modified");
-
-    return isMatching;
-  }
-
-  public static void main(String[] args) {
-    System.out.println("\n============Verifying the graph============");
   }
 }

@@ -8,11 +8,9 @@ import java.security.NoSuchAlgorithmException;
 
 public class Graph {
   public HashMap<Integer, Node> adjList;
-  int V;
   public boolean directed;
 
-  public Graph(int V, boolean directed) {
-    this.V = V;
+  public Graph(boolean directed) {
     this.adjList = new HashMap<Integer, Node>();
     this.directed = directed;
   }
@@ -36,25 +34,23 @@ public class Graph {
     LinkedList<Node> q = new LinkedList<Node>();
     q.offer(n);
     n.color = Color.GRAY;
-    n.labelHash = getCryptoHash(Integer.toString(n.label), hashAlgo);
-    BigInteger outXor = new BigInteger(n.labelHash, 16);
-
+    BigInteger outXor = n.labelHash = n.getHash(hashAlgo);
     while (!q.isEmpty()) {
       int size = q.size();
       while (size-- > 0) {
         Node u = q.poll();
         for (Node child : u.children) {
           u.outList.add(child);
-          if (child.labelHash.isEmpty())
-            child.labelHash = getCryptoHash(Integer.toString(child.label), hashAlgo);
-          outXor = outXor.xor(new BigInteger(child.labelHash, 16)); // xor function can also be
+          if (BigInteger.ZERO.equals(child.labelHash))
+            child.labelHash = child.getHash(hashAlgo);
+          outXor = outXor.xor(child.labelHash); // xor function can also be
           if (child.color == Color.WHITE) {
             child.color = Color.GRAY;
             q.offer(child);
           }
         }
         u.color = Color.BLACK;
-        u.hashVal = getCryptoHash(random + "" + outXor + u.label, hashAlgo);
+        u.hashVal = getCryptoHash(random + outXor.toString() + u.label, hashAlgo);
         gHash = getCryptoHash(gHash + random + u.hashVal, hashAlgo);
       }
     }
@@ -70,7 +66,7 @@ public class Graph {
     n.color = Color.GRAY;
     BigInteger outXor = new BigInteger(getCryptoHash(Integer.toString(n.label), hashAlgo), 16);
 
-    if (!outXor.equals(new BigInteger(n.labelHash, 16)))
+    if (!outXor.equals(n.labelHash))
       throw new Exception(n.label + "'s label hash is not matching, data has been modified: initial outXor");
 
     while (!q.isEmpty()) {
@@ -78,11 +74,11 @@ public class Graph {
       while (size-- > 0) {
         Node u = q.poll();
         for (Node child : u.outList) {
-          String childCalcHash = getCryptoHash(Integer.toString(child.label), hashAlgo);
+          BigInteger childCalcHash = n.getHash(hashAlgo);
           if (!childCalcHash.equals(child.labelHash))
             throw new Exception(
                 child.label + "'s label hash is not matching, data has been modified: children traversal");
-          outXor = outXor.xor(new BigInteger(childCalcHash, 16)); // xor function can also be
+          outXor = outXor.xor(childCalcHash); // xor function can also be
           if (child.color == Color.WHITE) {
             child.color = Color.GRAY;
             q.offer(child);
@@ -111,13 +107,6 @@ public class Graph {
     this.adjList.forEach((label, node) -> {
       System.out.println(label + "->" + node.labelHash);
     });
-  }
-
-  public String xor(String s1, String s2) {
-    StringBuilder sb = new StringBuilder();
-    for (int i = 0; i < s1.length() && i < s2.length(); i++)
-      sb.append((char) (s1.charAt(i) ^ s2.charAt(i)));
-    return sb.toString();
   }
 
   private static String bytesToHex(byte[] hash) {
