@@ -21,11 +21,13 @@ public class gHMAC {
     String currentLine = graphData.readLine();
     // int n = Integer.parseInt(currentLine.trim());
 
-    Graph graph = new Graph(false); // * true: for dir graphs; false: for undir graphs
+    // * param 1 => true: for dir graphs; false: for undir graphs
+    // * param 2 => false: to fail-stop; true: fail-warn (default is false)
+    Graph graph = new Graph(false, true);
     while ((currentLine = graphData.readLine()) != null) {
       String[] nodes = currentLine.trim().split("\\s+");
       int src = Integer.parseInt(nodes[0]), dst = Integer.parseInt(nodes[1]);
-      if(src != dst)
+      if (src != dst)
         graph.addEdge(src, dst);
     }
     graphData.close();
@@ -44,9 +46,9 @@ public class gHMAC {
     // for(Node node: sourceList)
     // System.out.println(node.label);
     graphTag = graph.getCryptoHash((key ^ OPAD) + graph.getCryptoHash((key ^ IPAD) + random + ghash, hashAlgo),
-    hashAlgo);
+        hashAlgo);
     System.out.println("Hash value on sender's side: " + graphTag);
-    
+
     gVrfy verifier = new gVrfy();
     verifier.gVerify(sourceList, graph, graphTag, ghash);
 

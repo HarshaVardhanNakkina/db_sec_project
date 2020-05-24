@@ -19,7 +19,7 @@ public class gVrfy {
 
     g.adjList.forEach((label, node) -> {
       node.color = Color.WHITE;
-      // if(label == 1) //* To verify fail-warn/stop mechanism
+      // if (label == 1) // * To verify fail-warn/stop mechanism
       // node.label = 5;
     });
     // System.out.println("sourceList size " + sourceList.size());
@@ -31,16 +31,16 @@ public class gVrfy {
           ghash = g.BFSVrfy(node, random, hashAlgo);
       }
       if (!ghash.equals(recv_ghash))
-        throw new Exception("ghash values are not matching, data has been modified");
+        g.warnOrStop("ghash values are not matching, data has been modified");
       graphTag = g.getCryptoHash((key ^ OPAD) + g.getCryptoHash((key ^ IPAD) + random + ghash, hashAlgo), hashAlgo);
 
       if (!gTag.equals(graphTag))
-        throw new Exception("graphTag values are not matching, data has been modified");
+        g.warnOrStop("graphTag values are not matching, data has been modified");
     } catch (Exception e) {
       System.out.println(e);
     }
 
-    System.out.println("Hash value on receiver's side: " + graphTag);
+    System.out.println("\nHash value on receiver's side: " + graphTag);
 
     boolean isMatching = gTag.equals(graphTag);
     System.out.println("\n" + isMatching);

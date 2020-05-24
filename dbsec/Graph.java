@@ -49,7 +49,7 @@ public class Graph {
         Node u = q.poll();
         for (Node child : u.children) {
           u.outList.add(child);
-          if (BigInteger.ZERO.equals(child.labelHash))
+          if (child.labelHash != null)
             child.labelHash = child.getHash(hashAlgo);
           outXor = outXor.xor(child.labelHash); // xor function can also be
           if (child.color == Color.WHITE) {
@@ -66,7 +66,7 @@ public class Graph {
     return gHash;
   }
 
-  public static void warnOrStop(String msg) throws Exception {
+  public void warnOrStop(String msg) throws Exception {
     if (warn) {
       System.out.println(msg);
     } else
@@ -82,16 +82,18 @@ public class Graph {
     BigInteger outXor = new BigInteger(getCryptoHash(Integer.toString(n.label), hashAlgo), 16);
 
     if (!outXor.equals(n.labelHash))
-      warnOrStop(n.label + "'s label hash is not matching, data has been modified"); // : initial outXor
+      warnOrStop(n.label + "'s label hash is not matching, data has been modified: initial outXor"); // : initial outXor
 
     while (!q.isEmpty()) {
       int size = q.size();
       while (size-- > 0) {
         Node u = q.poll();
         for (Node child : u.outList) {
-          BigInteger childCalcHash = n.getHash(hashAlgo);
+          BigInteger childCalcHash = child.getHash(hashAlgo);
           if (!childCalcHash.equals(child.labelHash))
-            warnOrStop(child.label + "'s label hash is not matching, data has been modified"); // : children traversal
+            warnOrStop(child.label + "'s label hash is not matching, data has been modified: children traversal"); // :
+                                                                                                                   // children
+                                                                                                                   // traversal
           outXor = outXor.xor(childCalcHash);
           if (child.color == Color.WHITE) {
             child.color = Color.GRAY;

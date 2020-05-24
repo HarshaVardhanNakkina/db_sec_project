@@ -23,6 +23,8 @@ public class Node {
     this.label = vertex;
     this.outList = new HashSet<Node>();
     this.children = new HashSet<Node>();
+    this.hashVal = "";
+    this.labelHash = BigInteger.ZERO;
   }
 
   public BigInteger getHash(String algorithm) {
