@@ -36,7 +36,8 @@ public class Graph {
     LinkedList<Node> q = new LinkedList<Node>();
     q.offer(n);
     n.color = Color.GRAY;
-    String outXor = n.labelHash = getCryptoHash(Integer.toString(n.label), hashAlgo);
+    n.labelHash = getCryptoHash(Integer.toString(n.label), hashAlgo);
+    BigInteger outXor = new BigInteger(n.labelHash, 16);
 
     while (!q.isEmpty()) {
       int size = q.size();
@@ -46,14 +47,14 @@ public class Graph {
           u.outList.add(child);
           if (child.labelHash.isEmpty())
             child.labelHash = getCryptoHash(Integer.toString(child.label), hashAlgo);
-          outXor = getCryptoHash(outXor + child.labelHash, hashAlgo); // xor function can also be
+          outXor = outXor.xor(new BigInteger(child.labelHash, 16)); // xor function can also be
           if (child.color == Color.WHITE) {
             child.color = Color.GRAY;
             q.offer(child);
           }
         }
         u.color = Color.BLACK;
-        u.hashVal = getCryptoHash(random + outXor + u.label, hashAlgo);
+        u.hashVal = getCryptoHash(random + "" + outXor + u.label, hashAlgo);
         gHash = getCryptoHash(gHash + random + u.hashVal, hashAlgo);
       }
     }
@@ -67,9 +68,9 @@ public class Graph {
     LinkedList<Node> q = new LinkedList<Node>();
     q.offer(n);
     n.color = Color.GRAY;
-    String outXor = getCryptoHash(Integer.toString(n.label), hashAlgo);
+    BigInteger outXor = new BigInteger(getCryptoHash(Integer.toString(n.label), hashAlgo), 16);
 
-    if (!outXor.equals(n.labelHash))
+    if (!outXor.equals(new BigInteger(n.labelHash, 16)))
       throw new Exception(n.label + "'s label hash is not matching, data has been modified: initial outXor");
 
     while (!q.isEmpty()) {
@@ -81,14 +82,14 @@ public class Graph {
           if (!childCalcHash.equals(child.labelHash))
             throw new Exception(
                 child.label + "'s label hash is not matching, data has been modified: children traversal");
-          outXor = getCryptoHash(outXor + childCalcHash, hashAlgo); // xor function can also be
+          outXor = outXor.xor(new BigInteger(childCalcHash, 16)); // xor function can also be
           if (child.color == Color.WHITE) {
             child.color = Color.GRAY;
             q.offer(child);
           }
         }
         u.color = Color.BLACK;
-        String calcHashVal = getCryptoHash(random + outXor + u.label, hashAlgo);
+        String calcHashVal = getCryptoHash(random + "" + outXor + u.label, hashAlgo);
         if (!u.hashVal.equals(calcHashVal))
           throw new Exception(u.label + "'s Hashval is not matching, data has been modified");
         gHash = getCryptoHash(gHash + random + calcHashVal, hashAlgo);
