@@ -9,10 +9,18 @@ import java.security.NoSuchAlgorithmException;
 public class Graph {
   public HashMap<Integer, Node> adjList;
   public boolean directed;
+  private static boolean warn; // by default warn is false
 
   public Graph(boolean directed) {
     this.adjList = new HashMap<Integer, Node>();
     this.directed = directed;
+    warn = false;
+  }
+
+  public Graph(boolean directed, boolean w) {
+    this.adjList = new HashMap<Integer, Node>();
+    this.directed = directed;
+    warn = w;
   }
 
   public void addEdge(int src, int dst) {
@@ -58,6 +66,13 @@ public class Graph {
     return gHash;
   }
 
+  public static void warnOrStop(String msg) throws Exception {
+    if (warn) {
+      System.out.println(msg);
+    } else
+      throw new Exception(msg);
+  }
+
   public String BFSVrfy(Node n, int random, String hashAlgo) throws Exception {
     // * IMPLEMENTS THE FAIL-STOP / FAIL-WARN MECHANISM
     String gHash = "hymn_for_the_weekend";
@@ -67,7 +82,7 @@ public class Graph {
     BigInteger outXor = new BigInteger(getCryptoHash(Integer.toString(n.label), hashAlgo), 16);
 
     if (!outXor.equals(n.labelHash))
-      throw new Exception(n.label + "'s label hash is not matching, data has been modified: initial outXor");
+      warnOrStop(n.label + "'s label hash is not matching, data has been modified"); // : initial outXor
 
     while (!q.isEmpty()) {
       int size = q.size();
@@ -76,9 +91,8 @@ public class Graph {
         for (Node child : u.outList) {
           BigInteger childCalcHash = n.getHash(hashAlgo);
           if (!childCalcHash.equals(child.labelHash))
-            throw new Exception(
-                child.label + "'s label hash is not matching, data has been modified: children traversal");
-          outXor = outXor.xor(childCalcHash); // xor function can also be
+            warnOrStop(child.label + "'s label hash is not matching, data has been modified"); // : children traversal
+          outXor = outXor.xor(childCalcHash);
           if (child.color == Color.WHITE) {
             child.color = Color.GRAY;
             q.offer(child);
@@ -87,7 +101,7 @@ public class Graph {
         u.color = Color.BLACK;
         String calcHashVal = getCryptoHash(random + "" + outXor + u.label, hashAlgo);
         if (!u.hashVal.equals(calcHashVal))
-          throw new Exception(u.label + "'s Hashval is not matching, data has been modified");
+          warnOrStop(u.label + "'s Hashval is not matching, data has been modified");
         gHash = getCryptoHash(gHash + random + calcHashVal, hashAlgo);
       }
     }
