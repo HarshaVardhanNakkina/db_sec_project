@@ -17,13 +17,13 @@ public class gHMAC {
 
   public static void main(String[] args) throws Exception {
     BufferedReader graphData = null;
-    graphData = new BufferedReader(new FileReader("./data/30000.txt"));
+    graphData = new BufferedReader(new FileReader("./data/50000.txt"));
     String currentLine = graphData.readLine();
-    // int n = Integer.parseInt(currentLine.trim());
+    int n = Integer.parseInt(currentLine.trim());
 
     // * param 1 => true: for dir graphs; false: for undir graphs
     // * param 2 => false: to fail-stop; true: fail-warn (default is false)
-    Graph graph = new Graph(false, true);
+    Graph graph = new Graph(false, false);
     while ((currentLine = graphData.readLine()) != null) {
       String[] nodes = currentLine.trim().split("\\s+");
       int src = Integer.parseInt(nodes[0]), dst = Integer.parseInt(nodes[1]);
@@ -36,6 +36,7 @@ public class gHMAC {
       node.color = Color.WHITE;
     });
     System.out.println("============Calculating============\n");
+    
     graph.adjList.forEach((label, node) -> {
       if (node.color == Color.WHITE) {
         sourceList.add(node);
@@ -46,11 +47,15 @@ public class gHMAC {
     // for(Node node: sourceList)
     // System.out.println(node.label);
     graphTag = graph.getCryptoHash((key ^ OPAD) + graph.getCryptoHash((key ^ IPAD) + random + ghash, hashAlgo),
-        hashAlgo);
+    hashAlgo);
     System.out.println("Hash value on sender's side: " + graphTag);
-
+    
     gVrfy verifier = new gVrfy();
+    // long startTime = System.nanoTime();
     verifier.gVerify(sourceList, graph, graphTag, ghash);
+    // long endTime = System.nanoTime();
+    // double duration = (endTime - startTime) / 1000000.0 / 1000.0;
+    // System.out.println(n + "," + duration);
 
   }
 }
