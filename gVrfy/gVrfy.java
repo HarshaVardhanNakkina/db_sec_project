@@ -16,11 +16,11 @@ public class gVrfy {
   public void gVerify(List<Node> sourceList, Graph g, String gTag, String recv_ghash) {
     // * RESET THE COLORS FIRST
     System.out.println("\n============Verifying============");
-
+    Random rand = new Random();
     g.adjList.forEach((label, node) -> {
       node.color = Color.WHITE;
-      // if (label == 1) // * To verify fail-warn/stop mechanism
-      // node.label = 5;
+      if (label == 1755 && rand.nextInt(3) < 2) // * To verify fail-warn/stop mechanism
+        node.label = 134982;
     });
     // System.out.println("sourceList size " + sourceList.size());
     // for(Node node: sourceList)

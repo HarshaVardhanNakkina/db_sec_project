@@ -17,7 +17,7 @@ public class gHMAC {
 
   public static void main(String[] args) throws Exception {
     BufferedReader graphData = null;
-    graphData = new BufferedReader(new FileReader("./data/50000.txt"));
+    graphData = new BufferedReader(new FileReader("./data/1000000.txt"));
     String currentLine = graphData.readLine();
     int n = Integer.parseInt(currentLine.trim());
 
@@ -51,11 +51,11 @@ public class gHMAC {
     System.out.println("Hash value on sender's side: " + graphTag);
     
     gVrfy verifier = new gVrfy();
-    // long startTime = System.nanoTime();
+    long startTime = System.nanoTime();
     verifier.gVerify(sourceList, graph, graphTag, ghash);
-    // long endTime = System.nanoTime();
-    // double duration = (endTime - startTime) / 1000000.0 / 1000.0;
-    // System.out.println(n + "," + duration);
+    long endTime = System.nanoTime();
+    double duration = (endTime - startTime) / 1000000.0 / 1000.0;
+    System.out.println(n + "," + duration);
 
   }
 }
