@@ -42,12 +42,13 @@ public class Graph {
     LinkedList<Node> q = new LinkedList<Node>();
     n.color = Color.GRAY;
     q.offer(n);
-    BigInteger outXor = n.labelHash = n.getHash(hashAlgo);
+    // BigInteger outXor = n.labelHash = n.getHash(hashAlgo);
     while (!q.isEmpty()) {
       int size = q.size();
       while (size-- > 0) {
         Node u = q.poll();
-        outXor = u.getHash(hashAlgo);
+        // outXor = u.getHash(hashAlgo);
+        BigInteger outXor = u.labelHash = u.getHash(hashAlgo);
         for (Node child : u.children) {
           u.outList.add(child);
           if (child.labelHash == null)
@@ -80,16 +81,18 @@ public class Graph {
     LinkedList<Node> q = new LinkedList<Node>();
     n.color = Color.GRAY;
     q.offer(n);
-    BigInteger outXor = new BigInteger(getCryptoHash(Integer.toString(n.label), hashAlgo), 16);
-
-    if (!outXor.equals(n.labelHash))
-      warnOrStop(n.label + "'s label hash is not matching, data has been modified: initial outXor");
+    // BigInteger outXor = n.getHash(hashAlgo);
+    // if (!outXor.equals(n.labelHash))
+    //   warnOrStop(n.label + "'s label hash is not matching, data has been modified: initial outXor");
 
     while (!q.isEmpty()) {
       int size = q.size();
       while (size-- > 0) {
         Node u = q.poll();
-        outXor = u.getHash(hashAlgo);
+        BigInteger outXor = u.getHash(hashAlgo);
+        if (!outXor.equals(u.labelHash))
+          warnOrStop(u.label + "'s label hash is not matching, data has been modified: initial outXor");
+        
         for (Node child : u.outList) {
           if (child.labelHash == null)
             child.labelHash = child.getHash(hashAlgo);

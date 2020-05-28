@@ -31,7 +31,6 @@ public class gVrfy {
     try {
       for (Node node : sourceList) {
         if (node.color == Color.WHITE) {
-          System.out.println("source:" + node.label);
           ghash = g.BFSVrfy(node, random, hashAlgo);
         }
       }
