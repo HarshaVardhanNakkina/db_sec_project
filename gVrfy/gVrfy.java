@@ -21,13 +21,13 @@ public class gVrfy {
       node.color = Color.WHITE;
       // * To verify fail-warn/stop mechanism
       // if (label == 1) {
-      //   node.label = 5;
+      // node.label = 5;
       // }
     });
     // Node x = null;
     // for (Map.Entry<Integer, Node> mapElement : g.adjList.entrySet()) {
     // int key = mapElement.getKey();
-    // if(key == 1)
+    // if (key == 1)
     // x = mapElement.getValue();
     // if (x != null)
     // mapElement.getValue().outList.remove(x);

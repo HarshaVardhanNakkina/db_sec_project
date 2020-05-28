@@ -94,7 +94,7 @@ public class Graph {
         if (!outXor.equals(u.labelHash))
           warnOrStop(u.label + "'s label hash is not matching, data has been modified: initial outXor");
 
-        for (Node child : u.outList) {u
+        for (Node child : u.outList) {
           if (child.labelHash == null)
             child.labelHash = child.getHash(hashAlgo);
           BigInteger childCalcHash = child.getHash(hashAlgo);
