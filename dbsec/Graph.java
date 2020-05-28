@@ -83,7 +83,8 @@ public class Graph {
     q.offer(n);
     // BigInteger outXor = n.getHash(hashAlgo);
     // if (!outXor.equals(n.labelHash))
-    //   warnOrStop(n.label + "'s label hash is not matching, data has been modified: initial outXor");
+    // warnOrStop(n.label + "'s label hash is not matching, data has been modified:
+    // initial outXor");
 
     while (!q.isEmpty()) {
       int size = q.size();
@@ -92,8 +93,8 @@ public class Graph {
         BigInteger outXor = u.getHash(hashAlgo);
         if (!outXor.equals(u.labelHash))
           warnOrStop(u.label + "'s label hash is not matching, data has been modified: initial outXor");
-        
-        for (Node child : u.outList) {
+
+        for (Node child : u.outList) {u
           if (child.labelHash == null)
             child.labelHash = child.getHash(hashAlgo);
           BigInteger childCalcHash = child.getHash(hashAlgo);
@@ -107,7 +108,7 @@ public class Graph {
           }
         }
         u.color = Color.BLACK;
-        String calcHashVal =  getCryptoHash(random + outXor.toString() + u.label, hashAlgo);
+        String calcHashVal = getCryptoHash(random + outXor.toString() + u.label, hashAlgo);
         if (!u.hashVal.equals(calcHashVal))
           warnOrStop(u.label + "'s Hashval is not matching, data has been modified");
         gHash = getCryptoHash(gHash + random + calcHashVal, hashAlgo);

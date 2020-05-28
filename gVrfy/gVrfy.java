@@ -16,14 +16,22 @@ public class gVrfy {
   public void gVerify(List<Node> sourceList, Graph g, String gTag, String recv_ghash) {
     System.out.println("\n============Verifying============");
     Random rand = new Random();
-
     // * RESET THE COLORS FIRST
     g.adjList.forEach((label, node) -> {
       node.color = Color.WHITE;
       // * To verify fail-warn/stop mechanism
-      if (label == 1)
-        node.label = 5;
+      // if (label == 1) {
+      //   node.label = 5;
+      // }
     });
+    // Node x = null;
+    // for (Map.Entry<Integer, Node> mapElement : g.adjList.entrySet()) {
+    // int key = mapElement.getKey();
+    // if(key == 1)
+    // x = mapElement.getValue();
+    // if (x != null)
+    // mapElement.getValue().outList.remove(x);
+    // }
     // System.out.println("sourceList size " + sourceList.size());
     // for(Node node: sourceList)
     // System.out.println(node.label);

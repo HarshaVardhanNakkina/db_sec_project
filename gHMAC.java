@@ -36,7 +36,7 @@ public class gHMAC {
       node.color = Color.WHITE;
     });
     System.out.println("============Calculating============\n");
-    
+
     graph.adjList.forEach((label, node) -> {
       if (node.color == Color.WHITE) {
         sourceList.add(node);
@@ -47,9 +47,9 @@ public class gHMAC {
     // for(Node node: sourceList)
     // System.out.println(node.label);
     graphTag = graph.getCryptoHash((key ^ OPAD) + graph.getCryptoHash((key ^ IPAD) + random + ghash, hashAlgo),
-    hashAlgo);
+        hashAlgo);
     System.out.println("Hash value on sender's side: " + graphTag);
-    
+
     gVrfy verifier = new gVrfy();
     long startTime = System.nanoTime();
     verifier.gVerify(sourceList, graph, graphTag, ghash);
