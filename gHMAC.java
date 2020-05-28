@@ -35,13 +35,11 @@ public class gHMAC {
     graph.adjList.forEach((label, node) -> {
       node.color = Color.WHITE;
     });
-    // graph.printGraph();
     System.out.println("============Calculating============\n");
     
     graph.adjList.forEach((label, node) -> {
       if (node.color == Color.WHITE) {
         sourceList.add(node);
-        // System.out.println("source:" + node.label);
         ghash = graph.BFS(node, random, hashAlgo);
       }
     });

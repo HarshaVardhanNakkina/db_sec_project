@@ -51,9 +51,8 @@ public class Graph {
           u.outList.add(child);
           if (child.labelHash == null)
             child.labelHash = child.getHash(hashAlgo);
-          outXor = outXor.xor(child.labelHash); // xor function can also be
+          outXor = outXor.xor(child.labelHash);
           if (child.color == Color.WHITE) {
-            // System.out.println("child: " + child.label);
             child.color = Color.GRAY;
             q.offer(child);
           }
@@ -83,7 +82,7 @@ public class Graph {
     BigInteger outXor = new BigInteger(getCryptoHash(Integer.toString(n.label), hashAlgo), 16);
 
     if (!outXor.equals(n.labelHash))
-      warnOrStop(n.label + "'s label hash is not matching, data has been modified: initial outXor"); // : initial outXor
+      warnOrStop(n.label + "'s label hash is not matching, data has been modified: initial outXor");
 
     while (!q.isEmpty()) {
       int size = q.size();
@@ -94,16 +93,10 @@ public class Graph {
             child.labelHash = child.getHash(hashAlgo);
           BigInteger childCalcHash = child.getHash(hashAlgo);
 
-          // System.out.println(child.labelHash);
-          // System.out.println(childCalcHash);
-
           if (!childCalcHash.equals(child.labelHash))
-            warnOrStop(child.label + "'s label hash is not matching, data has been modified: children traversal"); // :
-                                                                                                                   // children
-                                                                                                                   // traversal
+            warnOrStop(child.label + "'s label hash is not matching, data has been modified: children traversal");
           outXor = outXor.xor(childCalcHash);
           if (child.color == Color.WHITE) {
-            // System.out.println("child: " + child.label);
             child.color = Color.GRAY;
             q.offer(child);
           }

@@ -14,22 +14,24 @@ public class gVrfy {
   public static String graphTag = "";
 
   public void gVerify(List<Node> sourceList, Graph g, String gTag, String recv_ghash) {
-    // * RESET THE COLORS FIRST
     System.out.println("\n============Verifying============");
     Random rand = new Random();
+
+    // * RESET THE COLORS FIRST
     g.adjList.forEach((label, node) -> {
       node.color = Color.WHITE;
-      // if (label == 1) // * To verify fail-warn/stop mechanism
-      // node.label = 5;
+      // * To verify fail-warn/stop mechanism
+      // if (label == 1 && rand.nextInt(3) < 2)
+      //   node.label = 5;
     });
-    // g.printGraph();
     // System.out.println("sourceList size " + sourceList.size());
     // for(Node node: sourceList)
     // System.out.println(node.label);
+    // * Now run the BFS using sourceList
     try {
       for (Node node : sourceList) {
         if (node.color == Color.WHITE) {
-          // System.out.println("source:" + node.label);
+          System.out.println("source:" + node.label);
           ghash = g.BFSVrfy(node, random, hashAlgo);
         }
       }
