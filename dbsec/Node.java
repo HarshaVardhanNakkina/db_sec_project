@@ -24,7 +24,7 @@ public class Node {
     this.outList = new HashSet<Node>();
     this.children = new HashSet<Node>();
     this.hashVal = "";
-    this.labelHash = BigInteger.ZERO;
+    this.labelHash = null;
   }
 
   public BigInteger getHash(String algorithm) {

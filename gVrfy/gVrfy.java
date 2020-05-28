@@ -19,16 +19,19 @@ public class gVrfy {
     Random rand = new Random();
     g.adjList.forEach((label, node) -> {
       node.color = Color.WHITE;
-      if (label == 1755 && rand.nextInt(3) < 2) // * To verify fail-warn/stop mechanism
-        node.label = 134982;
+      // if (label == 1) // * To verify fail-warn/stop mechanism
+      // node.label = 5;
     });
+    // g.printGraph();
     // System.out.println("sourceList size " + sourceList.size());
     // for(Node node: sourceList)
     // System.out.println(node.label);
     try {
       for (Node node : sourceList) {
-        if (node.color == Color.WHITE)
+        if (node.color == Color.WHITE) {
+          // System.out.println("source:" + node.label);
           ghash = g.BFSVrfy(node, random, hashAlgo);
+        }
       }
       if (!ghash.equals(recv_ghash))
         g.warnOrStop("ghash values are not matching, data has been modified");

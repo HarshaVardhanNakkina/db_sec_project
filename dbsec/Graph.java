@@ -40,8 +40,8 @@ public class Graph {
   public String BFS(Node n, int random, String hashAlgo) {
     String gHash = "hymn_for_the_weekend";
     LinkedList<Node> q = new LinkedList<Node>();
-    q.offer(n);
     n.color = Color.GRAY;
+    q.offer(n);
     BigInteger outXor = n.labelHash = n.getHash(hashAlgo);
     while (!q.isEmpty()) {
       int size = q.size();
@@ -49,10 +49,11 @@ public class Graph {
         Node u = q.poll();
         for (Node child : u.children) {
           u.outList.add(child);
-          if (child.labelHash != null)
+          if (child.labelHash == null)
             child.labelHash = child.getHash(hashAlgo);
           outXor = outXor.xor(child.labelHash); // xor function can also be
           if (child.color == Color.WHITE) {
+            // System.out.println("child: " + child.label);
             child.color = Color.GRAY;
             q.offer(child);
           }
@@ -77,8 +78,8 @@ public class Graph {
     // * IMPLEMENTS THE FAIL-STOP / FAIL-WARN MECHANISM
     String gHash = "hymn_for_the_weekend";
     LinkedList<Node> q = new LinkedList<Node>();
-    q.offer(n);
     n.color = Color.GRAY;
+    q.offer(n);
     BigInteger outXor = new BigInteger(getCryptoHash(Integer.toString(n.label), hashAlgo), 16);
 
     if (!outXor.equals(n.labelHash))
@@ -89,13 +90,20 @@ public class Graph {
       while (size-- > 0) {
         Node u = q.poll();
         for (Node child : u.outList) {
+          if (child.labelHash == null)
+            child.labelHash = child.getHash(hashAlgo);
           BigInteger childCalcHash = child.getHash(hashAlgo);
+
+          // System.out.println(child.labelHash);
+          // System.out.println(childCalcHash);
+
           if (!childCalcHash.equals(child.labelHash))
             warnOrStop(child.label + "'s label hash is not matching, data has been modified: children traversal"); // :
                                                                                                                    // children
                                                                                                                    // traversal
           outXor = outXor.xor(childCalcHash);
           if (child.color == Color.WHITE) {
+            // System.out.println("child: " + child.label);
             child.color = Color.GRAY;
             q.offer(child);
           }

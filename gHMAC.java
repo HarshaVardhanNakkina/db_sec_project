@@ -17,13 +17,13 @@ public class gHMAC {
 
   public static void main(String[] args) throws Exception {
     BufferedReader graphData = null;
-    graphData = new BufferedReader(new FileReader("./data/1000000.txt"));
+    graphData = new BufferedReader(new FileReader("./data/sample.txt"));
     String currentLine = graphData.readLine();
     int n = Integer.parseInt(currentLine.trim());
 
     // * param 1 => true: for dir graphs; false: for undir graphs
     // * param 2 => false: to fail-stop; true: fail-warn (default is false)
-    Graph graph = new Graph(false, false);
+    Graph graph = new Graph(false, true);
     while ((currentLine = graphData.readLine()) != null) {
       String[] nodes = currentLine.trim().split("\\s+");
       int src = Integer.parseInt(nodes[0]), dst = Integer.parseInt(nodes[1]);
@@ -35,11 +35,13 @@ public class gHMAC {
     graph.adjList.forEach((label, node) -> {
       node.color = Color.WHITE;
     });
+    // graph.printGraph();
     System.out.println("============Calculating============\n");
     
     graph.adjList.forEach((label, node) -> {
       if (node.color == Color.WHITE) {
         sourceList.add(node);
+        // System.out.println("source:" + node.label);
         ghash = graph.BFS(node, random, hashAlgo);
       }
     });

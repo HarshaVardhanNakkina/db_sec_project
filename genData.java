@@ -3,7 +3,7 @@ import java.io.*;
 
 public class genData {
   public static void main(String[] args) throws IOException {
-    int n = 30000;
+    int n = 100;
 		FileWriter fw = new FileWriter("./data/" + n +".txt", false);
 		Random rand = new Random();
 		fw.write(String.valueOf(n) + "\n");
