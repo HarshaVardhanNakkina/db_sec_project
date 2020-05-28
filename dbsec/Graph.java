@@ -47,6 +47,7 @@ public class Graph {
       int size = q.size();
       while (size-- > 0) {
         Node u = q.poll();
+        outXor = u.getHash(hashAlgo);
         for (Node child : u.children) {
           u.outList.add(child);
           if (child.labelHash == null)
@@ -88,6 +89,7 @@ public class Graph {
       int size = q.size();
       while (size-- > 0) {
         Node u = q.poll();
+        outXor = u.getHash(hashAlgo);
         for (Node child : u.outList) {
           if (child.labelHash == null)
             child.labelHash = child.getHash(hashAlgo);
@@ -102,7 +104,7 @@ public class Graph {
           }
         }
         u.color = Color.BLACK;
-        String calcHashVal = getCryptoHash(random + "" + outXor + u.label, hashAlgo);
+        String calcHashVal =  getCryptoHash(random + outXor.toString() + u.label, hashAlgo);
         if (!u.hashVal.equals(calcHashVal))
           warnOrStop(u.label + "'s Hashval is not matching, data has been modified");
         gHash = getCryptoHash(gHash + random + calcHashVal, hashAlgo);

@@ -21,8 +21,8 @@ public class gVrfy {
     g.adjList.forEach((label, node) -> {
       node.color = Color.WHITE;
       // * To verify fail-warn/stop mechanism
-      // if (label == 1 && rand.nextInt(3) < 2)
-      //   node.label = 5;
+      if (label == 1)
+        node.label = 5;
     });
     // System.out.println("sourceList size " + sourceList.size());
     // for(Node node: sourceList)
