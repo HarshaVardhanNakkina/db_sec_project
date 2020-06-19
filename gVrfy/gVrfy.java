@@ -20,9 +20,9 @@ public class gVrfy {
     g.adjList.forEach((label, node) -> {
       node.color = Color.WHITE;
       // * To verify fail-warn/stop mechanism
-      // if (label == 1) {
-      // node.label = 5;
-      // }
+      if (label == 1) {
+        node.label = 5;
+      }
     });
     // Node x = null;
     // for (Map.Entry<Integer, Node> mapElement : g.adjList.entrySet()) {

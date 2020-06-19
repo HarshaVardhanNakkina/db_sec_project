@@ -23,7 +23,7 @@ public class gHMAC {
 
     // * param 1 => true: for dir graphs; false: for undir graphs
     // * param 2 => false: to fail-stop; true: fail-warn (default is false)
-    Graph graph = new Graph(false, true);
+    Graph graph = new Graph(false, false);
     while ((currentLine = graphData.readLine()) != null) {
       String[] nodes = currentLine.trim().split("\\s+");
       int src = Integer.parseInt(nodes[0]), dst = Integer.parseInt(nodes[1]);
